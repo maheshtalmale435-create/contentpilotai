@@ -53,6 +53,12 @@ export interface ReelClip {
   viralScore: number;
 }
 
+const getClipUrl = (filename: string) => {
+  const base = import.meta.env.BASE_URL || '/';
+  const cleanBase = base.endsWith('/') ? base : `${base}/`;
+  return `${cleanBase}clips/${filename}`;
+};
+
 const REEL_CLIPS: ReelClip[] = [
   {
     id: 'clip-1',
@@ -65,7 +71,7 @@ const REEL_CLIPS: ReelClip[] = [
     viewBadge: '+3.1k views',
     badgeBg: 'bg-lime-400',
     badgeText: 'text-black',
-    image: '/clips/clip-1.jpg',
+    image: getClipUrl('clip-1.jpg'),
     headlineBanner: {
       text: 'REGARDLESS OF OPPONENT',
       bg: 'bg-amber-400',
@@ -89,7 +95,7 @@ const REEL_CLIPS: ReelClip[] = [
     viewBadge: '+7.5k views',
     badgeBg: 'bg-cyan-400',
     badgeText: 'text-black',
-    image: '/clips/clip-2.jpg',
+    image: getClipUrl('clip-2.jpg'),
     headlineBanner: {
       text: 'ORGANIC DISTRIBUTION',
       bg: 'bg-cobalt-500',
@@ -113,7 +119,7 @@ const REEL_CLIPS: ReelClip[] = [
     viewBadge: '+12.8k views',
     badgeBg: 'bg-coral-400',
     badgeText: 'text-white',
-    image: '/clips/clip-3.jpg',
+    image: getClipUrl('clip-3.jpg'),
     headlineBanner: {
       text: 'MY GO-TO HYDRATION! 💧',
       bg: 'bg-black/85',
@@ -137,7 +143,7 @@ const REEL_CLIPS: ReelClip[] = [
     viewBadge: '+18.4k views',
     badgeBg: 'bg-emerald-400',
     badgeText: 'text-black',
-    image: '/clips/clip-4.jpg',
+    image: getClipUrl('clip-4.jpg'),
     headlineBanner: {
       text: 'SELF-TRUST & REPETITION',
       bg: 'bg-purple-600',
@@ -161,7 +167,7 @@ const REEL_CLIPS: ReelClip[] = [
     viewBadge: '+4.2k views',
     badgeBg: 'bg-lime-400',
     badgeText: 'text-black',
-    image: '/clips/clip-5.jpg',
+    image: getClipUrl('clip-5.jpg'),
     headlineBanner: {
       text: 'THE 3 UX MISTAKES',
       bg: 'bg-black/90',
@@ -185,7 +191,7 @@ const REEL_CLIPS: ReelClip[] = [
     viewBadge: '+24.5k views',
     badgeBg: 'bg-amber-400',
     badgeText: 'text-black',
-    image: '/clips/clip-6.jpg',
+    image: getClipUrl('clip-6.jpg'),
     headlineBanner: {
       text: '20 CLIPS IN 1 HOUR',
       bg: 'bg-cobalt-600',
