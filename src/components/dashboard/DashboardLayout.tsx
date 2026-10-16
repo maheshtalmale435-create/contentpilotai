@@ -68,9 +68,7 @@ export function DashboardLayout() {
         <div className="h-16 flex items-center justify-between px-4 border-b border-ink/8 shrink-0">
           <Link to="/" title="Return to ContentPilot AI Homepage" className="cursor-pointer group flex items-center">
             {collapsed ? (
-              <div className="w-10 h-10 bg-cobalt-500 rounded-xl flex items-center justify-center mx-auto group-hover:scale-105 transition-transform shadow-xs">
-                <span className="text-white font-bold text-sm">CP</span>
-              </div>
+              <Logo size="sm" iconOnly />
             ) : (
               <Logo size="sm" />
             )}

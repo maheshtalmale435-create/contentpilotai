@@ -1,25 +1,41 @@
-import { PenTool } from 'lucide-react';
+interface LogoProps {
+  size?: 'sm' | 'md' | 'lg';
+  dark?: boolean;
+  iconOnly?: boolean;
+  className?: string;
+}
 
-export function Logo({ size = 'md', dark = false }: { size?: 'sm' | 'md' | 'lg'; dark?: boolean }) {
-  const sizes = {
-    sm: { icon: 26, text: 'text-lg' },
-    md: { icon: 32, text: 'text-xl' },
-    lg: { icon: 40, text: 'text-2xl' },
+export function Logo({ size = 'md', dark = false, iconOnly = false, className = '' }: LogoProps) {
+  const base = import.meta.env.BASE_URL || '/';
+  const cleanBase = base.endsWith('/') ? base : `${base}/`;
+  const logoSrc = dark ? `${cleanBase}logo-dark.png` : `${cleanBase}logo.png`;
+  const markSrc = `${cleanBase}logo-mark.png`;
+
+  const heightClasses = {
+    sm: iconOnly ? 'w-8 h-8' : 'h-8 sm:h-9',
+    md: iconOnly ? 'w-10 h-10' : 'h-10 sm:h-11',
+    lg: iconOnly ? 'w-14 h-14' : 'h-12 sm:h-14',
   };
-  const s = sizes[size];
-  return (
-    <div className="flex items-center gap-2.5 select-none group cursor-pointer">
-      <div
-        className="relative flex items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-105 group-hover:-rotate-3 shadow-xs"
-        style={{ width: s.icon, height: s.icon }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-tr from-cobalt-600 via-cobalt-500 to-indigo-500 rounded-xl" />
-        <PenTool size={s.icon * 0.55} className="relative text-white" strokeWidth={2.5} />
-        <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-coral-500 ring-2 ring-white/0 animate-ping-slow" />
+
+  if (iconOnly) {
+    return (
+      <div className={`relative inline-flex items-center justify-center select-none group cursor-pointer ${className}`}>
+        <img
+          src={markSrc}
+          alt="ContentPilot AI"
+          className={`${heightClasses[size]} object-contain drop-shadow-xs transition-transform duration-300 group-hover:scale-105 group-hover:-rotate-3`}
+        />
       </div>
-      <span className={`font-display font-bold tracking-tight ${s.text} ${dark ? 'text-white' : 'text-ink'} transition-colors duration-200 group-hover:text-cobalt-600`}>
-        ContentPilot<span className="text-cobalt-500"> AI</span>
-      </span>
+    );
+  }
+
+  return (
+    <div className={`inline-flex items-center select-none group cursor-pointer ${className}`}>
+      <img
+        src={logoSrc}
+        alt="ContentPilot AI — Create • Analyze • Grow"
+        className={`${heightClasses[size]} w-auto max-w-[220px] sm:max-w-[260px] object-contain transition-transform duration-300 group-hover:scale-102`}
+      />
     </div>
   );
 }

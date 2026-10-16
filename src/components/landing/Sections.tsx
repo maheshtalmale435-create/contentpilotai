@@ -24,6 +24,7 @@ import { useData } from '@/data/DataContext';
 import { useToast } from '@/components/ui/Toast';
 import { formatCurrency } from '@/lib/format';
 import type { SubscriptionTier } from '@/types';
+import { Logo } from '@/components/ui/Logo';
 
 export function Pricing() {
   const { subscriptionPlans, loginAsDemo, setUserTier } = useData();
@@ -478,15 +479,10 @@ export function Footer() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 navigate('/');
               }}
-              className="flex items-center gap-2.5 cursor-pointer group w-fit"
+              className="flex items-center cursor-pointer group w-fit"
               title="Return to top of ContentPilot AI"
             >
-              <div className="w-9 h-9 bg-cobalt-500 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-105 group-hover:-rotate-3 transition-transform">
-                <span className="text-white font-extrabold text-sm">CP</span>
-              </div>
-              <span className="font-display font-bold text-xl tracking-tight group-hover:text-cobalt-300 transition-colors">
-                ContentPilot<span className="text-cobalt-400"> AI</span>
-              </span>
+              <Logo size="lg" dark />
             </div>
             <p className="text-xs text-white/50 leading-relaxed max-w-sm">
               The creative operating system for modern social media creators, growth founders, and agencies. Engineered for high-retention organic reach.
