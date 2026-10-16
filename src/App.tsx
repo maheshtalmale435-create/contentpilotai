@@ -1,6 +1,7 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { DataProvider, useData } from '@/data/DataContext';
 import { ToastProvider } from '@/components/ui/Toast';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { LandingPage } from '@/pages/LandingPage';
 import { LoginPage, SignupPage, ForgotPasswordPage, OnboardingPage } from '@/pages/AuthPages';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
@@ -96,13 +97,15 @@ function AppRoutes() {
 
 function App() {
   return (
-    <DataProvider>
-      <ToastProvider>
-        <HashRouter>
-          <AppRoutes />
-        </HashRouter>
-      </ToastProvider>
-    </DataProvider>
+    <ErrorBoundary>
+      <DataProvider>
+        <ToastProvider>
+          <HashRouter>
+            <AppRoutes />
+          </HashRouter>
+        </ToastProvider>
+      </DataProvider>
+    </ErrorBoundary>
   );
 }
 
