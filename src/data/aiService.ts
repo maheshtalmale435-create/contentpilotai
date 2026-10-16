@@ -84,12 +84,16 @@ export interface GenerateResult {
 }
 
 export function generateContent(params: GenerateParams): GenerateResult {
-  const { type, topic } = params;
+  const { type, topic, platform, tone } = params;
   const hashtags = getHashtags(topic);
 
   switch (type) {
-    case 'hook':
-      return { content: fillTemplate(pick(hooks), topic), hashtags: hashtags.slice(0, 3) };
+    case 'hook': {
+      let hook = fillTemplate(pick(hooks), topic);
+      if (platform === 'tiktok') hook = `POV: ${hook.replace(/^(POV:\s*)+/i, '')}`;
+      if (tone === 'Bold') hook = `🚨 ${hook.toUpperCase()}`;
+      return { content: hook, hashtags: hashtags.slice(0, 3) };
+    }
 
     case 'hashtags':
       return { content: hashtags.join(' '), hashtags };
@@ -109,8 +113,19 @@ export function generateContent(params: GenerateParams): GenerateResult {
     case 'caption':
     default: {
       const hook = fillTemplate(pick(hooks), topic);
-      const body = fillTemplate(pick(bodyTemplates), topic);
-      const cta = fillTemplate(pick(ctas), topic);
+      let body = fillTemplate(pick(bodyTemplates), topic);
+      let cta = fillTemplate(pick(ctas), topic);
+
+      if (platform === 'linkedin') {
+        body = `Key takeaways on ${topic}:\n\n• Focus on systemic clarity over short-term spikes\n• Data-informed iteration compounds faster than guesswork\n• Authenticity creates organic brand moats\n\nWhat is your team's perspective on this?`;
+        cta = 'Drop your thoughts in the comments or repost to share with your network.';
+      } else if (platform === 'twitter') {
+        return {
+          content: `${hook}\n\nHere is what 99% of people get wrong about ${topic}:\n\n1/ Consistency > intensity\n2/ Test before you invest\n3/ Your audience already knows what they want\n\nRT the first tweet if this helped.`,
+          hashtags: hashtags.slice(0, 2),
+        };
+      }
+
       return {
         content: `${hook}\n\n${body}\n\n${cta}`,
         hashtags,

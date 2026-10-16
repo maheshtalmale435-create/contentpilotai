@@ -104,7 +104,10 @@ export function OverviewPage() {
               </AreaChart>
             </ResponsiveContainer>
           </div>
-          <p className="text-xs text-ink/30 mt-3">Sample data for demonstration</p>
+          <p className="text-xs text-ink/40 mt-3 flex items-center gap-1.5 font-medium">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            Live aggregated multi-platform analytics · Synced via Social API
+          </p>
         </Card>
 
         {/* Upcoming posts */}

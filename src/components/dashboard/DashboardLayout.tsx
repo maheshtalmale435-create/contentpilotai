@@ -26,7 +26,7 @@ const navItems = [
 ];
 
 export function DashboardLayout() {
-  const { currentUser, logout, notifications, markNotificationRead, markAllNotificationsRead } = useData();
+  const { currentUser, logout, notifications, markNotificationRead, markAllNotificationsRead, setCurrentUserRole } = useData();
   const navigate = useNavigate();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
@@ -223,6 +223,16 @@ export function DashboardLayout() {
                       <Link to="/app/settings" onClick={() => setProfileOpen(false)} className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-ink/60 hover:bg-lavender-100 transition-colors">
                         <UserIcon size={16} /> Profile & Settings
                       </Link>
+                      <button
+                        onClick={() => {
+                          setCurrentUserRole('owner');
+                          navigate('/admin');
+                          setProfileOpen(false);
+                        }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-cobalt-600 hover:bg-cobalt-50 transition-colors"
+                      >
+                        <Sparkles size={16} /> Admin / Owner View
+                      </button>
                       <button onClick={handleLogout} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-error-500 hover:bg-error-50 transition-colors">
                         <LogOut size={16} /> Sign out
                       </button>

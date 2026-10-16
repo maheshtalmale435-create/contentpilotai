@@ -62,13 +62,13 @@ const contentPillars: ContentPillar[] = [
 ];
 
 const posts: Post[] = [
-  { id: 'post-1', title: 'Monday Motivation Routine', caption: 'Your skin works hard all week. Give it the reset it deserves with our overnight recovery serum. Swipe to see the 3-step ritual we swear by →', platform: 'instagram', status: 'published', contentType: 'caption', hashtags: ['#skincare', '#mondayroutine', '#cleanbeauty', '#bloomco'], scheduledDate: iso(2), createdAt: iso(5), campaignId: 'camp-1', metrics: { likes: 1243, comments: 87, shares: 42, reach: 8200 }, pinned: true },
-  { id: 'post-2', title: 'Ingredient Spotlight: Niacinamide', caption: 'Niacinamide isn\'t just a buzzword — it\'s a multitasking hero. Here\'s what 5% can do for your skin in 4 weeks.', platform: 'instagram', status: 'published', contentType: 'carousel-outline', hashtags: ['#niacinamide', '#skincareeducation', '#ingredients'], scheduledDate: iso(7), createdAt: iso(10), campaignId: 'camp-1', metrics: { likes: 2104, comments: 156, shares: 98, reach: 14500 }, pinned: false },
+  { id: 'post-1', title: 'Monday Motivation Routine', caption: 'Your skin works hard all week. Give it the reset it deserves with our overnight recovery serum. Swipe to see the 3-step ritual we swear by →', platform: 'instagram', status: 'published', contentType: 'caption', hashtags: ['#skincare', '#mondayroutine', '#cleanbeauty', '#bloomco'], scheduledDate: iso(2), createdAt: iso(5), campaignId: 'camp-1', metrics: { likes: 1243, comments: 87, shares: 42, reach: 8200 }, pinned: true, permalink: 'https://www.instagram.com/p/CpM9283kaL/' },
+  { id: 'post-2', title: 'Ingredient Spotlight: Niacinamide', caption: 'Niacinamide isn\'t just a buzzword — it\'s a multitasking hero. Here\'s what 5% can do for your skin in 4 weeks.', platform: 'instagram', status: 'published', contentType: 'carousel-outline', hashtags: ['#niacinamide', '#skincareeducation', '#ingredients'], scheduledDate: iso(7), createdAt: iso(10), campaignId: 'camp-1', metrics: { likes: 2104, comments: 156, shares: 98, reach: 14500 }, pinned: false, permalink: 'https://www.instagram.com/p/Cq819N2oP/' },
   { id: 'post-3', title: 'Reel: 60-Second Evening Routine', caption: 'POV: you finally found a routine that takes 60 seconds and actually works.', platform: 'tiktok', status: 'scheduled', contentType: 'reel-script', hashtags: ['#eveningroutine', '#skincaretok', '#fyp', '#60seconds'], scheduledDate: futureIso(1), createdAt: iso(1), campaignId: 'camp-2', pinned: false },
   { id: 'post-4', title: 'Customer Spotlight — Maya', caption: 'Maya tried our Barrier Repair Cream for 30 days. The results speak for themselves. Swipe to see her journey.', platform: 'instagram', status: 'scheduled', contentType: 'caption', hashtags: ['#customerlove', '#30daychallenge', '#barrierrepair'], scheduledDate: futureIso(3), createdAt: iso(2), campaignId: 'camp-2', pinned: false },
   { id: 'post-5', title: 'LinkedIn: Building a Clean Beauty Brand', caption: 'When we started Bloom & Co., we had one rule: no ingredient we wouldn\'t put on our own families. Here\'s how that principle shaped our supply chain.', platform: 'linkedin', status: 'draft', contentType: 'caption', hashtags: ['#cleanbeauty', '#brandstory', '#entrepreneurship'], scheduledDate: null, createdAt: iso(3), campaignId: null, pinned: false },
-  { id: 'post-6', title: 'Why Your Skin Barrier Matters', caption: 'Think of your skin barrier as a brick wall. Lipids are the mortar. When the mortar weakens, everything gets in. Here\'s how to rebuild it.', platform: 'instagram', status: 'published', contentType: 'carousel-outline', hashtags: ['#skinbarrier', '#skincaretips', '#bloomco'], scheduledDate: iso(14), createdAt: iso(17), campaignId: 'camp-1', metrics: { likes: 3421, comments: 234, shares: 187, reach: 22100 }, pinned: false },
-  { id: 'post-7', title: 'Flash Sale Announcement', caption: '48 hours only. Our bestselling Hydrating Cleanser is 20% off. Because great skin shouldn\'t be a luxury.', platform: 'twitter', status: 'archived', contentType: 'caption', hashtags: ['#flashsale', '#skincaredeal'], scheduledDate: iso(30), createdAt: iso(33), campaignId: 'camp-3', metrics: { likes: 456, comments: 23, shares: 89, reach: 4100 }, pinned: false },
+  { id: 'post-6', title: 'Why Your Skin Barrier Matters', caption: 'Think of your skin barrier as a brick wall. Lipids are the mortar. When the mortar weakens, everything gets in. Here\'s how to rebuild it.', platform: 'instagram', status: 'published', contentType: 'carousel-outline', hashtags: ['#skinbarrier', '#skincaretips', '#bloomco'], scheduledDate: iso(14), createdAt: iso(17), campaignId: 'camp-1', metrics: { likes: 3421, comments: 234, shares: 187, reach: 22100 }, pinned: false, permalink: 'https://www.instagram.com/p/Cr48291mX/' },
+  { id: 'post-7', title: 'Flash Sale Announcement', caption: '48 hours only. Our bestselling Hydrating Cleanser is 20% off. Because great skin shouldn\'t be a luxury.', platform: 'twitter', status: 'archived', contentType: 'caption', hashtags: ['#flashsale', '#skincaredeal'], scheduledDate: iso(30), createdAt: iso(33), campaignId: 'camp-3', metrics: { likes: 456, comments: 23, shares: 89, reach: 4100 }, pinned: false, permalink: 'https://x.com/bloomco/status/17812938472918' },
   { id: 'post-8', title: 'Story Series: A Day in the Lab', caption: 'Behind every bottle is a lab, a formulator, and 47 iterations. Today we\'re showing you iteration #48.', platform: 'instagram', status: 'draft', contentType: 'carousel-outline', hashtags: ['#behindthescenes', '#formulation', '#bloomco'], scheduledDate: null, createdAt: iso(1), campaignId: 'camp-2', pinned: false },
 ];
 
@@ -79,11 +79,11 @@ const campaigns: Campaign[] = [
 ];
 
 const socialAccounts: SocialAccount[] = [
-  { platform: 'instagram', handle: '@bloomco', status: 'connected', followers: 48200, connectedAt: iso(120) },
-  { platform: 'tiktok', handle: '@bloomco', status: 'connected', followers: 18900, connectedAt: iso(90) },
-  { platform: 'linkedin', handle: 'Bloom & Co.', status: 'connected', followers: 5400, connectedAt: iso(100) },
-  { platform: 'twitter', handle: '@bloomco', status: 'disconnected', followers: 0, connectedAt: null },
-  { platform: 'facebook', handle: 'Bloom & Co.', status: 'disconnected', followers: 0, connectedAt: null },
+  { platform: 'instagram', handle: '@bloomco', status: 'connected', followers: 48200, connectedAt: iso(120), apiVersion: 'v19.0', scopes: ['instagram_basic', 'instagram_content_publish', 'instagram_manage_insights'], accessToken: 'EAAG_IG_48k9_live', expiresAt: futureIso(55), lastSyncedAt: iso(0), engagementRate: 4.8 },
+  { platform: 'tiktok', handle: '@bloomco', status: 'connected', followers: 18900, connectedAt: iso(90), apiVersion: 'v2', scopes: ['user.info.basic', 'video.publish', 'video.upload'], accessToken: 'act.tiktok_9921_live', expiresAt: futureIso(45), lastSyncedAt: iso(0), engagementRate: 6.2 },
+  { platform: 'linkedin', handle: 'Bloom & Co.', status: 'connected', followers: 5400, connectedAt: iso(100), apiVersion: 'v2', scopes: ['w_member_social', 'r_liteprofile'], accessToken: 'AQV_LI_3182_live', expiresAt: futureIso(60), lastSyncedAt: iso(1), engagementRate: 3.1 },
+  { platform: 'twitter', handle: '@bloomco', status: 'disconnected', followers: 0, connectedAt: null, apiVersion: 'v2.8' },
+  { platform: 'facebook', handle: 'Bloom & Co.', status: 'disconnected', followers: 0, connectedAt: null, apiVersion: 'v19.0' },
 ];
 
 const notifications: Notification[] = [
@@ -199,6 +199,16 @@ export function createSeedState(): DemoState {
     activityLogs,
     subscriptionPlans,
     analytics,
+    apiKeys: [
+      { id: 'key-1', name: 'Production Webhook / Zapier', key: 'cp_live_9a7d8e2bf34e819ac', createdAt: iso(60), lastUsed: iso(0) },
+      { id: 'key-2', name: 'Mobile App Publishing Agent', key: 'cp_live_41c09eb77a2d104fb', createdAt: iso(15), lastUsed: iso(2) },
+    ],
+    webhookConfig: {
+      url: 'https://api.bloomco.example.com/v1/social-webhooks',
+      secret: 'whsec_8849b2c0192e47fa9b1e',
+      events: ['post.published', 'analytics.synced', 'account.connected'],
+      active: true,
+    },
     seeded: true,
   };
 }

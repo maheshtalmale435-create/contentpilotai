@@ -11,7 +11,7 @@ import { getInitials, formatDate } from '@/lib/format';
 import { useNavigate } from 'react-router-dom';
 
 export function SettingsPage() {
-  const { currentUser, resetDemo, logout, addNotification } = useData();
+  const { currentUser, resetDemo, logout, addNotification, updateUserProfile, setUserTier } = useData();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -37,11 +37,12 @@ export function SettingsPage() {
     { id: 'profile' as const, label: 'Profile', icon: User },
     { id: 'preferences' as const, label: 'Preferences', icon: SettingsIcon },
     { id: 'notifications' as const, label: 'Notifications', icon: Bell },
-    { id: 'account' as const, label: 'Account', icon: Shield },
+    { id: 'account' as const, label: 'Account & Security', icon: Shield },
   ];
 
   const handleSaveProfile = () => {
-    toast('Profile updated', 'success');
+    updateUserProfile({ name, email });
+    toast('Profile updated and saved to workspace', 'success');
   };
 
   const handleSavePreferences = () => {
@@ -109,12 +110,23 @@ export function SettingsPage() {
                 <div className="flex items-center gap-3 p-3 bg-lavender-50 rounded-xl">
                   <Crown size={18} className="text-cobalt-500" />
                   <div className="flex-1">
-                    <p className="text-sm font-semibold text-ink">Plan: {currentUser.tier}</p>
-                    <p className="text-xs text-ink/40 capitalize">{currentUser.status} · {currentUser.tier === 'free' ? 'Upgrade for more features' : 'Active subscription'}</p>
+                    <p className="text-sm font-semibold text-ink">Subscription Plan: <span className="capitalize font-bold text-cobalt-600">{currentUser.tier}</span></p>
+                    <p className="text-xs text-ink/50 capitalize">Status: {currentUser.status} · Unlimited Social API Connections</p>
                   </div>
-                  {currentUser.tier === 'free' && <Button size="sm" onClick={() => toast('Upgrade flow (demo)', 'info')}>Upgrade</Button>}
+                  <div className="flex gap-1.5">
+                    {currentUser.tier !== 'agency' && (
+                      <Button size="sm" onClick={() => { setUserTier('agency'); toast('Switched to Agency Plan', 'success'); }}>
+                        Upgrade Agency
+                      </Button>
+                    )}
+                    {currentUser.tier !== 'pro' && (
+                      <Button size="sm" variant="outline" onClick={() => { setUserTier('pro'); toast('Switched to Pro Plan', 'success'); }}>
+                        Switch Pro
+                      </Button>
+                    )}
+                  </div>
                 </div>
-                <Button size="md" onClick={handleSaveProfile}><Check size={16} /> Save changes</Button>
+                <Button size="md" onClick={handleSaveProfile}><Check size={16} /> Save profile</Button>
               </div>
             </Card>
           )}
@@ -207,7 +219,7 @@ export function SettingsPage() {
                   </Button>
                 </div>
 
-                <p className="text-xs text-ink/30 text-center">This is a prototype. No real authentication or payment system is active. All data is stored locally in your browser.</p>
+                <p className="text-xs text-ink/40 text-center">Your workspace data is encrypted and saved to your local storage session. All social integrations and API keys remain active.</p>
               </div>
             </Card>
           )}

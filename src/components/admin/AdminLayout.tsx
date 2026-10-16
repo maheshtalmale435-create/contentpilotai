@@ -139,7 +139,16 @@ export function AdminLayout() {
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
                   <div className="absolute right-0 top-12 w-48 bg-white rounded-xl shadow-xl border border-ink/8 z-50 py-1.5 animate-fade-in-down">
-                    <Link to="/app" className="flex items-center gap-2 px-3 py-2 text-sm text-ink/60 hover:bg-lavender-50"><Sparkles size={15} /> Customer View</Link>
+                    <button
+                      onClick={() => {
+                        setCurrentUserRole('customer');
+                        navigate('/app');
+                        setProfileOpen(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-ink/70 hover:bg-lavender-50 transition-colors"
+                    >
+                      <Sparkles size={15} /> Creator App View
+                    </button>
                     <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-error-500 hover:bg-error-50"><LogOut size={15} /> Sign out</button>
                   </div>
                 </>

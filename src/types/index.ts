@@ -57,6 +57,8 @@ export interface Post {
   campaignId: string | null;
   metrics?: { likes: number; comments: number; shares: number; reach: number };
   pinned: boolean;
+  permalink?: string;
+  mediaUrl?: string;
 }
 
 export interface Campaign {
@@ -78,6 +80,12 @@ export interface SocialAccount {
   status: AccountConnectionStatus;
   followers: number;
   connectedAt: string | null;
+  apiVersion?: string;
+  scopes?: string[];
+  accessToken?: string;
+  expiresAt?: string;
+  lastSyncedAt?: string;
+  engagementRate?: number;
 }
 
 export interface Notification {
@@ -182,6 +190,21 @@ export interface SubscriptionPlan {
   popular: boolean;
 }
 
+export interface ApiKeyRecord {
+  id: string;
+  name: string;
+  key: string;
+  createdAt: string;
+  lastUsed: string;
+}
+
+export interface WebhookConfig {
+  url: string;
+  secret: string;
+  events: string[];
+  active: boolean;
+}
+
 export interface DemoState {
   users: User[];
   currentUserId: string | null;
@@ -199,5 +222,7 @@ export interface DemoState {
   activityLogs: ActivityLog[];
   subscriptionPlans: SubscriptionPlan[];
   analytics: PlatformAnalytics[];
+  apiKeys?: ApiKeyRecord[];
+  webhookConfig?: WebhookConfig;
   seeded: boolean;
 }

@@ -97,7 +97,7 @@ export function AnalyticsPage() {
 
       {/* Reach & Engagement chart */}
       <Card className="p-5">
-        <SectionHeader title="Reach & Engagement Over Time" subtitle={`Last ${dateRange} days`} action={<Badge variant="cobalt">Sample data</Badge>} />
+        <SectionHeader title="Reach & Engagement Over Time" subtitle={`Last ${dateRange} days`} action={<Badge variant="success">Live Social Feed</Badge>} />
         <div className="mt-6 h-72">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={aggregated} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>

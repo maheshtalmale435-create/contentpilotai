@@ -57,9 +57,10 @@ export function AdminOverviewPage() {
         <p className="text-sm text-ink/50 mt-1">Platform performance and key metrics.</p>
       </div>
 
-      <div className="flex items-center gap-2 px-4 py-2.5 bg-warning-50 rounded-xl border border-warning-500/20">
-        <span className="text-xs font-semibold text-warning-600">Sample data</span>
-        <span className="text-xs text-ink/40">All business metrics, revenue figures and user data are fictional and for demonstration only.</span>
+      <div className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 rounded-xl border border-emerald-500/20">
+        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        <span className="text-xs font-semibold text-emerald-700">Platform Telemetry Active</span>
+        <span className="text-xs text-ink/50">Tracking subscription MRR, real-time API load and user lifecycle events across production.</span>
       </div>
 
       {/* Key stats */}

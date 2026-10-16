@@ -1,157 +1,330 @@
 import { useState } from 'react';
-import { Palette, Download, Layout, Square, Monitor, Smartphone, Type, Image as ImageIcon, Sparkles } from 'lucide-react';
+import {
+  Palette, Download, Layout, Square, Monitor, Smartphone, Type, Image as ImageIcon,
+  Sparkles, Send, Check, ExternalLink, ShieldCheck, RefreshCw, Layers
+} from 'lucide-react';
 import { useData } from '@/data/DataContext';
 import { useToast } from '@/components/ui/Toast';
 import { Card, SectionHeader } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { Input, Select, Textarea } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
+import { exportCanvasDesignAsPng } from '@/lib/socialApi';
+import type { Platform } from '@/types';
 
-type TemplateType = 'post' | 'carousel' | 'story' | 'reel-cover';
+type AspectOption = 'square' | 'portrait' | 'story' | 'banner';
 
-const templates: { id: string; type: TemplateType; name: string; gradient: string; category: string }[] = [
-  { id: 't1', type: 'post', name: 'Product Spotlight', gradient: 'from-cobalt-500 to-cobalt-700', category: 'Product' },
-  { id: 't2', type: 'post', name: 'Quote Card', gradient: 'from-ink to-ink/80', category: 'Quote' },
-  { id: 't3', type: 'post', name: 'Sale Announcement', gradient: 'from-coral-500 to-coral-600', category: 'Promo' },
-  { id: 't4', type: 'carousel', name: '5 Tips Carousel', gradient: 'from-lavender-300 to-cobalt-300', category: 'Education' },
-  { id: 't5', type: 'carousel', name: 'Before / After', gradient: 'from-success-500 to-cobalt-500', category: 'Results' },
-  { id: 't6', type: 'story', name: 'Poll Story', gradient: 'from-coral-400 to-coral-600', category: 'Interactive' },
-  { id: 't7', type: 'story', name: 'Q&A Story', gradient: 'from-cobalt-400 to-lavender-400', category: 'Interactive' },
-  { id: 't8', type: 'reel-cover', name: 'Reel Cover Bold', gradient: 'from-ink to-coral-600', category: 'Reel' },
+const aspectConfigs: { id: AspectOption; label: string; ratio: string; icon: typeof Square; dimensions: string }[] = [
+  { id: 'square', label: '1:1 Square', ratio: 'aspect-square', icon: Square, dimensions: '1080 × 1080 px (Instagram / Facebook / X)' },
+  { id: 'portrait', label: '4:5 Portrait', ratio: 'aspect-[4/5]', icon: Layout, dimensions: '1080 × 1350 px (Instagram Feed / Carousel)' },
+  { id: 'story', label: '9:16 Story / Reel', ratio: 'aspect-[9/16]', icon: Smartphone, dimensions: '1080 × 1920 px (TikTok / Reels / Stories)' },
+  { id: 'banner', label: '16:9 Banner', ratio: 'aspect-[16/9]', icon: Monitor, dimensions: '1200 × 630 px (LinkedIn / Twitter Preview)' },
 ];
 
-const templateTypes: { value: TemplateType | 'all'; label: string; icon: typeof Layout }[] = [
-  { value: 'all', label: 'All', icon: Layout },
-  { value: 'post', label: 'Posts', icon: Square },
-  { value: 'carousel', label: 'Carousels', icon: Layout },
-  { value: 'story', label: 'Stories', icon: Smartphone },
-  { value: 'reel-cover', label: 'Reel Covers', icon: Monitor },
+const colorPalettes = [
+  { name: 'Midnight Cobalt', primary: '#0f172a', secondary: '#3457F1' },
+  { name: 'Sunset Glow', primary: '#1e1b4b', secondary: '#FF7058' },
+  { name: 'Emerald Forest', primary: '#064e3b', secondary: '#10b981' },
+  { name: 'Dark Luxe', primary: '#171717', secondary: '#475569' },
+  { name: 'Royal Violet', primary: '#2e1065', secondary: '#8b5cf6' },
+  { name: 'Rose Gold', primary: '#881337', secondary: '#f43f5e' },
 ];
 
 export function VisualStudioPage() {
-  const { businessProfile, addNotification } = useData();
+  const { businessProfile, publishPostDirectly, socialAccounts, addNotification } = useData();
   const { toast } = useToast();
-  const [filter, setFilter] = useState<TemplateType | 'all'>('all');
-  const [selected, setSelected] = useState<typeof templates[0] | null>(null);
 
-  const filtered = filter === 'all' ? templates : templates.filter(t => t.type === filter);
+  const [aspect, setAspect] = useState<AspectOption>('square');
+  const [headline, setHeadline] = useState(businessProfile.tagline || 'Skincare that actually listens');
+  const [subtext, setSubtext] = useState(businessProfile.description?.slice(0, 80) || 'Clean, sustainable skincare formulated for real results.');
+  const [badgeText, setBadgeText] = useState('PRO TIP');
+  const [handle, setHandle] = useState('@bloomco');
+  const [primaryColor, setPrimaryColor] = useState(businessProfile.brandColors[0]?.hex || '#171717');
+  const [secondaryColor, setSecondaryColor] = useState(businessProfile.brandColors[1]?.hex || '#3457F1');
+  const [isExporting, setIsExporting] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [targetPlatform, setTargetPlatform] = useState<Platform>('instagram');
 
-  const handleDownload = () => {
-    toast('Template design downloaded (demo)', 'success');
-    addNotification({ title: 'Template downloaded', message: `${selected?.name} template has been exported.`, type: 'success' });
+  const handleDownloadPng = async () => {
+    setIsExporting(true);
+    try {
+      await exportCanvasDesignAsPng({
+        title: headline,
+        subtitle: subtext,
+        handle,
+        badge: badgeText,
+        primaryColor,
+        secondaryColor,
+        aspect,
+        filename: `contentpilot-${aspect}-${Date.now()}.png`,
+      });
+      toast('High-resolution PNG graphic downloaded!', 'success');
+      addNotification({
+        title: 'Graphic Exported',
+        message: `Your ${aspect} graphic was successfully rendered and downloaded.`,
+        type: 'success',
+      });
+    } catch {
+      toast('Failed to export graphic', 'error');
+    } finally {
+      setIsExporting(false);
+    }
   };
 
-  const aspectMap: Record<TemplateType, string> = {
-    post: 'aspect-square',
-    carousel: 'aspect-[4/5]',
-    story: 'aspect-[9/16]',
-    'reel-cover': 'aspect-[9/16]',
+  const handlePublishGraphic = async () => {
+    const acc = socialAccounts.find(a => a.platform === targetPlatform);
+    if (!acc || acc.status !== 'connected') {
+      toast(`Please connect your ${targetPlatform} account first in Social Accounts.`, 'error');
+      return;
+    }
+
+    setIsPublishing(true);
+    try {
+      const dataUrl = await exportCanvasDesignAsPng({
+        title: headline,
+        subtitle: subtext,
+        handle,
+        badge: badgeText,
+        primaryColor,
+        secondaryColor,
+        aspect,
+      });
+
+      const res = await publishPostDirectly({
+        platform: targetPlatform,
+        title: `Visual Graphic: ${headline.slice(0, 40)}`,
+        caption: `${headline}\n\n${subtext}\n\nFollow ${handle} for daily breakdowns.`,
+        hashtags: ['#design', '#contentcreation', '#brandgrowth', '#visualstudio'],
+        mediaUrl: dataUrl,
+      });
+
+      toast(`Graphic published to ${targetPlatform}!`, 'success');
+    } catch {
+      toast('Failed to publish graphic', 'error');
+    } finally {
+      setIsPublishing(false);
+    }
   };
+
+  const currentAspect = aspectConfigs.find(a => a.id === aspect) || aspectConfigs[0];
 
   return (
     <div className="p-5 lg:p-8 max-w-7xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl lg:text-3xl font-bold font-display tracking-tight text-ink">Visual Studio</h1>
-        <p className="text-sm text-ink/50 mt-1">Design on-brand posts, carousels and stories with beautiful templates.</p>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl lg:text-3xl font-bold font-display tracking-tight text-ink">Visual Studio</h1>
+          <p className="text-sm text-ink/50 mt-1">Generate on-brand visual graphics, download high-res PNGs, and publish directly to social feeds.</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            size="md"
+            variant="outline"
+            onClick={handleDownloadPng}
+            loading={isExporting}
+          >
+            <Download size={16} /> Download PNG
+          </Button>
+          <Button
+            size="md"
+            onClick={handlePublishGraphic}
+            loading={isPublishing}
+          >
+            <Send size={16} /> Publish Graphic
+          </Button>
+        </div>
       </div>
 
-      {/* Brand colors */}
-      <Card className="p-5">
-        <SectionHeader title="Brand Colors" subtitle="Your saved brand palette" action={<Badge variant="lavender">From Brand Hub</Badge>} />
-        <div className="mt-4 flex flex-wrap gap-3">
-          {businessProfile.brandColors.map(color => (
-            <div key={color.name} className="flex items-center gap-3 p-3 rounded-xl border border-ink/8 bg-white">
-              <div className="w-12 h-12 rounded-lg shadow-sm" style={{ backgroundColor: color.hex }} />
-              <div>
-                <p className="text-sm font-medium text-ink">{color.name}</p>
-                <p className="text-xs text-ink/40 font-mono uppercase">{color.hex}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card>
-
-      {/* Filter tabs */}
+      {/* Format Selector Pills */}
       <div className="flex gap-2 flex-wrap">
-        {templateTypes.map(t => (
+        {aspectConfigs.map(item => (
           <button
-            key={t.value}
-            onClick={() => setFilter(t.value)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              filter === t.value ? 'bg-cobalt-500 text-white' : 'bg-white border border-ink/8 text-ink/50 hover:border-ink/15'
+            key={item.id}
+            onClick={() => setAspect(item.id)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              aspect === item.id
+                ? 'bg-cobalt-600 text-white shadow-sm'
+                : 'bg-white border border-ink/8 text-ink/60 hover:border-ink/20'
             }`}
           >
-            <t.icon size={15} /> {t.label}
+            <item.icon size={15} /> {item.label}
           </button>
         ))}
       </div>
 
-      {/* Templates grid */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {filtered.map(template => (
-          <Card key={template.id} hover className="overflow-hidden" onClick={() => setSelected(template)}>
-            <div className={`bg-gradient-to-br ${template.gradient} ${aspectMap[template.type]} relative flex items-center justify-center p-4`}>
-              <div className="text-center text-white">
-                <Sparkles size={20} className="mx-auto mb-2 opacity-80" />
-                <p className="text-sm font-display font-semibold">{template.name}</p>
-                <p className="text-xs opacity-60 mt-1">{template.category}</p>
-              </div>
-              <div className="absolute bottom-2 right-2">
-                <span className="text-[10px] px-2 py-0.5 bg-white/20 text-white rounded-full backdrop-blur-sm capitalize">{template.type.replace('-', ' ')}</span>
-              </div>
-            </div>
-            <div className="p-3 flex items-center justify-between">
-              <span className="text-sm font-medium text-ink">{template.name}</span>
-              <button onClick={(e) => { e.stopPropagation(); setSelected(template); }} className="text-xs text-cobalt-500 font-medium hover:text-cobalt-600">Use</button>
-            </div>
-          </Card>
-        ))}
-      </div>
+      {/* Main Studio Grid */}
+      <div className="grid lg:grid-cols-12 gap-6 items-start">
+        {/* Live Canvas Preview */}
+        <div className="lg:col-span-7 flex flex-col items-center">
+          <Card className="w-full p-6 flex flex-col items-center justify-center bg-lavender-50/50 border-ink/8 min-h-[480px]">
+            <div
+              className={`w-full max-w-md ${currentAspect.ratio} rounded-2xl p-8 relative flex flex-col justify-between overflow-hidden shadow-2xl transition-all duration-300`}
+              style={{
+                background: `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)`,
+              }}
+            >
+              {/* Background ambient accents */}
+              <div className="absolute top-0 right-0 w-48 h-48 rounded-full bg-white/10 blur-2xl pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-40 h-40 rounded-full bg-black/20 blur-xl pointer-events-none" />
 
-      {/* Preview modal */}
-      {selected && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-ink/40 backdrop-blur-sm animate-fade-in" onClick={() => setSelected(null)} />
-          <Card className="relative w-full max-w-2xl p-6 animate-scale-in">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-lg font-bold font-display text-ink">{selected.name}</h3>
-                <p className="text-sm text-ink/40">{selected.category} · {selected.type.replace('-', ' ')}</p>
+              {/* Top Bar: Badge & Brand Mark */}
+              <div className="relative z-10 flex items-center justify-between">
+                {badgeText && (
+                  <span className="px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold tracking-wider backdrop-blur-sm uppercase">
+                    {badgeText}
+                  </span>
+                )}
+                <span className="text-[11px] font-mono tracking-widest text-white/60 uppercase">
+                  ContentPilot Studio
+                </span>
               </div>
-              <button onClick={() => setSelected(null)} className="text-ink/30 hover:text-ink/60 transition-colors text-sm">Close</button>
+
+              {/* Main Headline & Subtitle */}
+              <div className="relative z-10 my-auto py-6">
+                <h2 className="text-2xl sm:text-3xl font-display font-extrabold text-white leading-tight tracking-tight drop-shadow-sm">
+                  {headline || 'Write your headline here...'}
+                </h2>
+                {subtext && (
+                  <p className="mt-3 text-sm sm:text-base text-white/85 leading-relaxed font-sans">
+                    {subtext}
+                  </p>
+                )}
+              </div>
+
+              {/* Footer: Brand Name & Handle */}
+              <div className="relative z-10 pt-4 border-t border-white/15 flex items-center justify-between text-xs text-white">
+                <span className="font-bold tracking-wider font-display uppercase">{businessProfile.businessName}</span>
+                <span className="font-medium text-white/75">{handle}</span>
+              </div>
             </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Live preview */}
-              <div className={`bg-gradient-to-br ${selected.gradient} ${aspectMap[selected.type]} rounded-2xl relative flex items-center justify-center p-6 max-w-xs mx-auto`}>
-                <div className="text-center text-white">
-                  <p className="text-lg font-display font-bold leading-tight">{businessProfile.tagline}</p>
-                  <p className="text-sm mt-3 opacity-70">{businessProfile.businessName}</p>
-                </div>
+
+            <p className="text-xs text-ink/40 mt-4 text-center">
+              Rendered at {currentAspect.dimensions} · Ready for instant export
+            </p>
+          </Card>
+        </div>
+
+        {/* Customization Controls */}
+        <div className="lg:col-span-5 space-y-4">
+          <Card className="p-5 space-y-4">
+            <SectionHeader title="Design Settings" subtitle="Personalize typography, copy and styling" />
+
+            <div>
+              <label className="block text-sm font-medium text-ink/70 mb-1">Badge / Tag Text</label>
+              <Input
+                value={badgeText}
+                onChange={e => setBadgeText(e.target.value)}
+                placeholder="e.g. BREAKING, 5 TIPS, CASE STUDY"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-ink/70 mb-1">Headline Text</label>
+              <Textarea
+                rows={3}
+                value={headline}
+                onChange={e => setHeadline(e.target.value)}
+                placeholder="Main hook or headline..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-ink/70 mb-1">Supporting Subtext</label>
+              <Textarea
+                rows={2}
+                value={subtext}
+                onChange={e => setSubtext(e.target.value)}
+                placeholder="Additional insight, context or call to action..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-ink/70 mb-1">Account Handle</label>
+              <Input
+                value={handle}
+                onChange={e => setHandle(e.target.value)}
+                placeholder="@yourbrand"
+              />
+            </div>
+
+            {/* Color Palette Selector */}
+            <div>
+              <label className="block text-sm font-medium text-ink/70 mb-2">Color Palettes & Gradients</label>
+              <div className="grid grid-cols-3 gap-2">
+                {colorPalettes.map(palette => (
+                  <button
+                    key={palette.name}
+                    onClick={() => {
+                      setPrimaryColor(palette.primary);
+                      setSecondaryColor(palette.secondary);
+                    }}
+                    className={`p-2 rounded-xl border flex items-center gap-2 transition-all ${
+                      primaryColor === palette.primary && secondaryColor === palette.secondary
+                        ? 'border-cobalt-500 bg-cobalt-50/30'
+                        : 'border-ink/8 hover:border-ink/20'
+                    }`}
+                  >
+                    <div
+                      className="w-5 h-5 rounded-full shrink-0 shadow-sm"
+                      style={{ background: `linear-gradient(135deg, ${palette.primary}, ${palette.secondary})` }}
+                    />
+                    <span className="text-xs font-medium text-ink truncate">{palette.name}</span>
+                  </button>
+                ))}
               </div>
-              {/* Controls */}
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-ink/70 mb-1.5">Headline</label>
-                  <input defaultValue={businessProfile.tagline} className="w-full px-3 py-2 text-sm bg-white border border-ink/10 rounded-lg focus:outline-none focus:border-cobalt-500" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-ink/70 mb-1.5">Subtext</label>
-                  <input defaultValue={businessProfile.businessName} className="w-full px-3 py-2 text-sm bg-white border border-ink/10 rounded-lg focus:outline-none focus:border-cobalt-500" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-ink/70 mb-2">Background color</label>
-                  <div className="flex gap-2">
-                    {businessProfile.brandColors.map(c => (
-                      <button key={c.hex} className="w-8 h-8 rounded-lg border-2 border-white shadow-sm hover:scale-110 transition-transform" style={{ backgroundColor: c.hex }} title={c.name} />
-                    ))}
-                  </div>
-                </div>
-                <Button size="md" className="w-full" onClick={handleDownload}><Download size={16} /> Download design (demo)</Button>
-                <p className="text-xs text-ink/30 text-center">Templates are design previews. Full export would require a rendering service.</p>
+            </div>
+
+            {/* Brand Hub Colors Quick Pick */}
+            <div>
+              <label className="block text-sm font-medium text-ink/70 mb-2">Saved Brand Hub Colors</label>
+              <div className="flex gap-2">
+                {businessProfile.brandColors.map(c => (
+                  <button
+                    key={c.name}
+                    onClick={() => setSecondaryColor(c.hex)}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-ink/10 hover:border-ink/30 text-xs font-medium bg-white"
+                  >
+                    <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: c.hex }} />
+                    <span>{c.name}</span>
+                  </button>
+                ))}
               </div>
+            </div>
+
+            {/* Publishing Target Platform */}
+            <div className="pt-2 border-t border-ink/8">
+              <label className="block text-sm font-medium text-ink/70 mb-1.5">Direct Social Publishing Channel</label>
+              <Select
+                value={targetPlatform}
+                onChange={e => setTargetPlatform(e.target.value as Platform)}
+              >
+                <option value="instagram">Instagram Feed</option>
+                <option value="linkedin">LinkedIn Update</option>
+                <option value="twitter">X / Twitter Post</option>
+                <option value="facebook">Facebook Page</option>
+              </Select>
+            </div>
+
+            <div className="pt-2 grid grid-cols-2 gap-3">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={handleDownloadPng}
+                loading={isExporting}
+              >
+                <Download size={15} /> Export PNG
+              </Button>
+              <Button
+                className="w-full bg-cobalt-600 hover:bg-cobalt-700 text-white"
+                onClick={handlePublishGraphic}
+                loading={isPublishing}
+              >
+                <Send size={15} /> Publish Live
+              </Button>
             </div>
           </Card>
         </div>
-      )}
+      </div>
     </div>
   );
 }

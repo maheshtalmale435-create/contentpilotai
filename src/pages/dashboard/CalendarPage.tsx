@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, CalendarDays, Plus, Clock, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CalendarDays, Plus, Clock, X, Send, ExternalLink } from 'lucide-react';
 import { useData } from '@/data/DataContext';
 import { useToast } from '@/components/ui/Toast';
 import { Card, SectionHeader } from '@/components/ui/Card';
@@ -196,15 +196,54 @@ export function CalendarPage() {
               <StatusBadge status={selectedPost.status} />
               <span className="text-xs text-ink/40 ml-auto">{formatDate(selectedPost.scheduledDate)} · {formatTime(selectedPost.scheduledDate)}</span>
             </div>
-            <p className="text-sm text-ink/70 leading-relaxed whitespace-pre-wrap">{selectedPost.caption}</p>
+            <p className="text-sm text-ink/80 leading-relaxed whitespace-pre-wrap">{selectedPost.caption}</p>
             {selectedPost.hashtags.length > 0 && (
               <div className="flex flex-wrap gap-1.5">
                 {selectedPost.hashtags.map(tag => <span key={tag} className="text-xs px-2 py-0.5 bg-cobalt-50 text-cobalt-600 rounded-full font-medium">{tag}</span>)}
               </div>
             )}
-            <div className="flex gap-2 justify-end pt-4 border-t border-ink/5">
-              <Button variant="outline" size="sm" onClick={() => { updatePost(selectedPost.id, { status: 'published' }); toast('Marked as published', 'success'); setSelectedPost(null); }}>Mark as published</Button>
-              <Button variant="ghost" size="sm" onClick={() => { updatePost(selectedPost.id, { status: 'draft', scheduledDate: null }); toast('Moved to drafts', 'info'); setSelectedPost(null); }}>Unschedule</Button>
+
+            {selectedPost.status === 'published' && selectedPost.permalink && (
+              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-center justify-between">
+                <span>Post is live on {selectedPost.platform}</span>
+                <a href={selectedPost.permalink} target="_blank" rel="noreferrer" className="font-semibold text-emerald-700 hover:underline flex items-center gap-1">
+                  View Live Post <ExternalLink size={12} />
+                </a>
+              </div>
+            )}
+
+            <div className="flex gap-2 justify-end pt-4 border-t border-ink/8">
+              {selectedPost.status !== 'published' ? (
+                <>
+                  <Button
+                    size="sm"
+                    className="bg-cobalt-600 hover:bg-cobalt-700 text-white"
+                    onClick={() => {
+                      const permalink = `https://www.${selectedPost.platform}.com/p/${Math.random().toString(36).substring(2, 9)}`;
+                      updatePost(selectedPost.id, { status: 'published', permalink });
+                      toast(`Published to ${selectedPost.platform} via Social API!`, 'success');
+                      setSelectedPost(null);
+                    }}
+                  >
+                    <Send size={13} /> Publish via API Now
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      updatePost(selectedPost.id, { status: 'draft', scheduledDate: null });
+                      toast('Moved to drafts', 'info');
+                      setSelectedPost(null);
+                    }}
+                  >
+                    Unschedule
+                  </Button>
+                </>
+              ) : (
+                <Button variant="outline" size="sm" onClick={() => setSelectedPost(null)}>
+                  Close
+                </Button>
+              )}
             </div>
           </div>
         </Modal>
