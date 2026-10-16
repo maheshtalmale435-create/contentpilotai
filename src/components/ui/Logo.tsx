@@ -1,41 +1,50 @@
 interface LogoProps {
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   dark?: boolean;
-  iconOnly?: boolean;
+  markOnly?: boolean;
   className?: string;
 }
 
-export function Logo({ size = 'md', dark = false, iconOnly = false, className = '' }: LogoProps) {
+export function Logo({ size = 'md', dark = false, markOnly = false, className = '' }: LogoProps) {
   const base = import.meta.env.BASE_URL || '/';
   const cleanBase = base.endsWith('/') ? base : `${base}/`;
   const logoSrc = dark ? `${cleanBase}logo-dark.png` : `${cleanBase}logo.png`;
   const markSrc = `${cleanBase}logo-mark.png`;
 
-  const heightClasses = {
-    sm: iconOnly ? 'w-8 h-8' : 'h-8 sm:h-9',
-    md: iconOnly ? 'w-10 h-10' : 'h-10 sm:h-11',
-    lg: iconOnly ? 'w-14 h-14' : 'h-12 sm:h-14',
+  const heights = {
+    sm: 'h-7',
+    md: 'h-8.5',
+    lg: 'h-11',
+    xl: 'h-14',
   };
 
-  if (iconOnly) {
+  const markSizes = {
+    sm: 'w-7 h-7',
+    md: 'w-9 h-9',
+    lg: 'w-11 h-11',
+    xl: 'w-14 h-14',
+  };
+
+  if (markOnly) {
     return (
-      <div className={`relative inline-flex items-center justify-center select-none group cursor-pointer ${className}`}>
+      <div className={`relative flex items-center justify-center shrink-0 select-none group cursor-pointer ${className}`}>
         <img
           src={markSrc}
           alt="ContentPilot AI"
-          className={`${heightClasses[size]} object-contain drop-shadow-xs transition-transform duration-300 group-hover:scale-105 group-hover:-rotate-3`}
+          className={`${markSizes[size]} object-contain group-hover:scale-105 group-hover:-rotate-3 transition-transform duration-300 drop-shadow-xs`}
         />
       </div>
     );
   }
 
   return (
-    <div className={`inline-flex items-center select-none group cursor-pointer ${className}`}>
+    <div className={`flex items-center select-none group cursor-pointer ${className}`}>
       <img
         src={logoSrc}
         alt="ContentPilot AI — Create • Analyze • Grow"
-        className={`${heightClasses[size]} w-auto max-w-[220px] sm:max-w-[260px] object-contain transition-transform duration-300 group-hover:scale-102`}
+        className={`${heights[size]} w-auto object-contain transition-transform duration-300 group-hover:scale-102`}
       />
     </div>
   );
 }
+

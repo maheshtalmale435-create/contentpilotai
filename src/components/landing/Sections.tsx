@@ -20,11 +20,11 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { Logo } from '@/components/ui/Logo';
 import { useData } from '@/data/DataContext';
 import { useToast } from '@/components/ui/Toast';
 import { formatCurrency } from '@/lib/format';
 import type { SubscriptionTier } from '@/types';
-import { Logo } from '@/components/ui/Logo';
 
 export function Pricing() {
   const { subscriptionPlans, loginAsDemo, setUserTier } = useData();
@@ -479,7 +479,7 @@ export function Footer() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 navigate('/');
               }}
-              className="flex items-center cursor-pointer group w-fit"
+              className="cursor-pointer group w-fit"
               title="Return to top of ContentPilot AI"
             >
               <Logo size="lg" dark />
