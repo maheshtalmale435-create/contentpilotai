@@ -1,48 +1,55 @@
-interface LogoProps {
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+import logoFull from '@/assets/brand/logo-full.png';
+import logoFullDark from '@/assets/brand/logo-full-dark.png';
+import logoIcon from '@/assets/brand/logo-icon.png';
+
+export interface LogoProps {
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   dark?: boolean;
-  markOnly?: boolean;
+  iconOnly?: boolean;
   className?: string;
 }
 
-export function Logo({ size = 'md', dark = false, markOnly = false, className = '' }: LogoProps) {
-  const base = import.meta.env.BASE_URL || '/';
-  const cleanBase = base.endsWith('/') ? base : `${base}/`;
-  const logoSrc = dark ? `${cleanBase}logo-dark.png` : `${cleanBase}logo.png`;
-  const markSrc = `${cleanBase}logo-mark.png`;
-
-  const heights = {
-    sm: 'h-7',
-    md: 'h-8.5',
-    lg: 'h-11',
+export function Logo({
+  size = 'md',
+  dark = false,
+  iconOnly = false,
+  className = '',
+}: LogoProps) {
+  // Height presets for lockup and icon
+  const fullSizes = {
+    xs: 'h-6',
+    sm: 'h-8',
+    md: 'h-10',
+    lg: 'h-12',
     xl: 'h-14',
   };
 
-  const markSizes = {
-    sm: 'w-7 h-7',
-    md: 'w-9 h-9',
-    lg: 'w-11 h-11',
+  const iconSizes = {
+    xs: 'w-6 h-6',
+    sm: 'w-8 h-8',
+    md: 'w-10 h-10',
+    lg: 'w-12 h-12',
     xl: 'w-14 h-14',
   };
 
-  if (markOnly) {
-    return (
-      <div className={`relative flex items-center justify-center shrink-0 select-none group cursor-pointer ${className}`}>
-        <img
-          src={markSrc}
-          alt="ContentPilot AI"
-          className={`${markSizes[size]} object-contain group-hover:scale-105 group-hover:-rotate-3 transition-transform duration-300 drop-shadow-xs`}
-        />
-      </div>
-    );
-  }
+  const imgSrc = iconOnly
+    ? logoIcon
+    : dark
+    ? logoFullDark
+    : logoFull;
 
   return (
-    <div className={`flex items-center select-none group cursor-pointer ${className}`}>
+    <div
+      className={`inline-flex items-center select-none group cursor-pointer ${className}`}
+      title="ContentPilot AI - Create · Analyze · Grow"
+    >
       <img
-        src={logoSrc}
-        alt="ContentPilot AI — Create • Analyze • Grow"
-        className={`${heights[size]} w-auto object-contain transition-transform duration-300 group-hover:scale-102`}
+        src={imgSrc}
+        alt="ContentPilot AI"
+        className={`object-contain transition-all duration-300 group-hover:scale-102 group-hover:drop-shadow-sm ${
+          iconOnly ? iconSizes[size] : fullSizes[size]
+        }`}
+        loading="eager"
       />
     </div>
   );
