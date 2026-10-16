@@ -193,6 +193,19 @@ export function Hero() {
     navigate('/signup');
   };
 
+  const handleExploreFeatures = () => {
+    const target = document.getElementById('channels') || document.getElementById('showcase');
+    if (target) {
+      const navOffset = 80;
+      const elementPosition = target.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - navOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   const handleLikeClick = (e: React.MouseEvent) => {
     const x = Math.random() * 24 - 12;
     const newHeart = { id: Date.now(), x };
@@ -356,23 +369,60 @@ export function Hero() {
           ))}
         </div>
 
+        {/* Left Floating Badge */}
+        <div
+          onClick={handleExploreFeatures}
+          className="hidden xl:flex absolute top-48 left-6 2xl:left-12 z-20 items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/90 backdrop-blur-md border border-ink/8 shadow-xl shadow-ink/5 animate-float-slow hover:scale-105 transition-transform cursor-pointer"
+          title="Click to explore features"
+        >
+          <div className="w-8 h-8 rounded-xl bg-coral-50 text-coral-600 flex items-center justify-center font-bold text-xs shadow-xs">
+            <Flame size={16} />
+          </div>
+          <div>
+            <div className="text-xs font-bold text-ink flex items-center gap-1">
+              <span>Viral Score 98/100</span>
+              <Sparkles size={11} className="text-amber-500" />
+            </div>
+            <div className="text-[10px] text-ink/40 font-mono">Calibrated hook formula</div>
+          </div>
+        </div>
+
+        {/* Right Floating Badge */}
+        <div
+          onClick={handleExploreFeatures}
+          className="hidden xl:flex absolute top-56 right-6 2xl:right-12 z-20 items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/90 backdrop-blur-md border border-ink/8 shadow-xl shadow-ink/5 animate-float-delayed hover:scale-105 transition-transform cursor-pointer"
+          title="Click to explore features"
+        >
+          <div className="w-8 h-8 rounded-xl bg-cobalt-50 text-cobalt-600 flex items-center justify-center font-bold text-xs shadow-xs">
+            <TrendingUp size={16} />
+          </div>
+          <div>
+            <div className="text-xs font-bold text-ink">+340% Avg. Reel Reach</div>
+            <div className="text-[10px] text-ink/40 font-mono">Instagram & TikTok</div>
+          </div>
+        </div>
+
         {/* CTAs */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5 animate-fade-in-up animation-delay-300">
           <Button
+            id="hero-get-started-btn"
             size="lg"
             onClick={handleStartCreating}
-            className="group shadow-lg shadow-cobalt-500/25 hover:shadow-xl hover:shadow-cobalt-500/35 hover:-translate-y-0.5 gap-2"
+            className="group relative shadow-lg shadow-cobalt-500/25 hover:shadow-xl hover:shadow-cobalt-500/35 hover:-translate-y-0.5 gap-2 overflow-hidden"
           >
-            <span>Get Started Free</span>
-            <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+            <span className="relative z-10">Get Started Free</span>
+            <ArrowRight size={18} className="relative z-10 transition-transform group-hover:translate-x-1" />
+            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
           </Button>
           <Button
+            id="hero-explore-features-btn"
             size="lg"
             variant="outline"
-            onClick={() => document.querySelector('#showcase')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-white/70 backdrop-blur-sm hover:bg-white"
+            onClick={handleExploreFeatures}
+            className="bg-white/80 backdrop-blur-sm hover:bg-white border-ink/12 hover:border-cobalt-500/40 hover:shadow-md transition-all gap-1.5"
           >
-            Explore Platform Features
+            <span>Explore Platform Features</span>
+            <ArrowRight size={15} className="text-ink/40 group-hover:text-cobalt-600 transition-colors" />
           </Button>
         </div>
 

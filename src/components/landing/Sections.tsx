@@ -473,11 +473,18 @@ export function Footer() {
         <div className="grid md:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 bg-cobalt-500 rounded-xl flex items-center justify-center shadow-sm">
+            <div
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                navigate('/');
+              }}
+              className="flex items-center gap-2.5 cursor-pointer group w-fit"
+              title="Return to top of ContentPilot AI"
+            >
+              <div className="w-9 h-9 bg-cobalt-500 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-105 group-hover:-rotate-3 transition-transform">
                 <span className="text-white font-extrabold text-sm">CP</span>
               </div>
-              <span className="font-display font-bold text-xl tracking-tight">
+              <span className="font-display font-bold text-xl tracking-tight group-hover:text-cobalt-300 transition-colors">
                 ContentPilot<span className="text-cobalt-400"> AI</span>
               </span>
             </div>

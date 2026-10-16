@@ -66,13 +66,15 @@ export function DashboardLayout() {
       {/* Sidebar */}
       <aside className={`fixed lg:sticky top-0 left-0 h-screen z-50 ${sidebarWidth} transition-all duration-300 bg-white border-r border-ink/8 flex flex-col ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
         <div className="h-16 flex items-center justify-between px-4 border-b border-ink/8 shrink-0">
-          {collapsed ? (
-            <div className="w-10 h-10 bg-cobalt-500 rounded-xl flex items-center justify-center mx-auto">
-              <span className="text-white font-bold text-sm">CP</span>
-            </div>
-          ) : (
-            <Logo size="sm" />
-          )}
+          <Link to="/" title="Return to ContentPilot AI Homepage" className="cursor-pointer group flex items-center">
+            {collapsed ? (
+              <div className="w-10 h-10 bg-cobalt-500 rounded-xl flex items-center justify-center mx-auto group-hover:scale-105 transition-transform shadow-xs">
+                <span className="text-white font-bold text-sm">CP</span>
+              </div>
+            ) : (
+              <Logo size="sm" />
+            )}
+          </Link>
           <button
             className="hidden lg:flex w-7 h-7 items-center justify-center rounded-lg text-ink/30 hover:bg-lavender-100 hover:text-ink/60 transition-colors"
             onClick={() => setCollapsed(!collapsed)}
