@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { DataProvider, useData } from '@/data/DataContext';
 import { ToastProvider } from '@/components/ui/Toast';
 import { LandingPage } from '@/pages/LandingPage';
@@ -98,9 +98,9 @@ function App() {
   return (
     <DataProvider>
       <ToastProvider>
-        <BrowserRouter>
+        <HashRouter>
           <AppRoutes />
-        </BrowserRouter>
+        </HashRouter>
       </ToastProvider>
     </DataProvider>
   );
